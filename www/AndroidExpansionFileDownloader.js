@@ -3,7 +3,7 @@ module.exports = {
         cordova.exec(
             successcallback,
             errorcallback,
-            'AndroidExpansionFilesDownloader',
+            'AndroidExpansionFileDownloader',
             'startDownload',
             [hostUrl, assetUrls]
         );
@@ -12,7 +12,7 @@ module.exports = {
         cordova.exec(
             successcallback,
             errorcallback,
-            'AndroidExpansionFilesDownloader',
+            'AndroidExpansionFileDownloader',
             'onProgressCallback',
             []
         );
