@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="cordova-plugin-device" version="1.0.0">
+        id="android-expansion-files-downloader" version="1.0.0">
     <name>Android Expansion Files Downloader</name>
     <description>Downloads android expansion files from an array of urls directly to the asset directory</description>
     <license>Apache 2.0</license>
