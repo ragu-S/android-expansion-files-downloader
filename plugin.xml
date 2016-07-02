@@ -12,7 +12,7 @@
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
             <feature name="AndroidExpansionFilesDownloader" >
-                <param name="android-package" value="com.androidexpansion.filedownloader"/>
+                <param name="android-package" value="com.androidexpansion.filedownloader.AndroidExpansionFilesDownloader"/>
                 <param name="onload" value="true" />
             </feature>
         </config-file>
