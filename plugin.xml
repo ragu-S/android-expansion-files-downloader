@@ -24,6 +24,8 @@
             <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
         </config-file>
 
-        <source-file src="src/android/AndroidExpansionFilesDownloader.js" target-dir="src/com/androidexpansion/filedownloader" />
+        <source-file src="src/android/AndroidExpansionFilesDownloader.java" target-dir="src/com/androidexpansion/filedownloader" />
+        <source-file src="src/android/DownloadExtraAssets.java" target-dir="src/com/androidexpansion/filedownloader" />
+        <source-file src="src/android/DownloadFilesTask.java" target-dir="src/com/androidexpansion/filedownloader" />
     </platform>
 </plugin>
