@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
-        id="android-expansion-files-downloader" version="1.0.0">
+        id="android-expansion-file-downloader" version="1.0.0">
     <name>Android Expansion Files Downloader</name>
     <description>Downloads android expansion files from an array of urls directly to the asset directory</description>
     <license>Apache 2.0</license>
     <keywords>cordova,device</keywords>
-    <js-module src="www/AndroidExpansionFilesDownloader.js" name="AndroidExpansionFilesDownloader">
-        <clobbers target="window.AndroidExpansionFilesDownloader" />
+    <js-module src="www/AndroidExpansionFileDownloader.js" name="AndroidExpansionFileDownloader">
+        <clobbers target="window.AndroidExpansionFileDownloader" />
     </js-module>
 
     <platform name="android">
         <config-file target="res/xml/config.xml" parent="/*">
-            <feature name="AndroidExpansionFilesDownloader" >
-                <param name="android-package" value="com.androidexpansion.filedownloader.AndroidExpansionFilesDownloader"/>
+            <feature name="AndroidExpansionFileDownloader" >
+                <param name="android-package" value="com.androidexpansion.filedownloader.AndroidExpansionFileDownloader"/>
                 <param name="onload" value="true" />
             </feature>
         </config-file>
