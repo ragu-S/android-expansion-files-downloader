@@ -1,0 +1,23 @@
+{
+  "name": "android-expansion-files-downloader",
+  "version": "1.0.0",
+  "description": "Downloads extra android expansion resources remotely",
+  "cordova": {
+    "platforms": [
+      "android"
+    ]
+  },
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "engines": [
+    {
+      "name": "cordova-android",
+      "version": ">=4.0.0"
+    }
+  ],
+  "author": "Ragu Sivanandha",
+  "license": "ISC"
+}
