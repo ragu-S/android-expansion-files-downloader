@@ -60,9 +60,9 @@ public class DownloadExtraAssets {
 
         // Get path to where assets need to be stored
         // QA/Prod: data/data/com.mustangcustomizer2.alpha/files/www/assets/cars/mustang2015/geometry/Geometry_305_v6_fb_coupe_frontlightbulb1_a001.b3d.dflr";
-        this.assetFolderPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator  + "Android"
-                + File.separator + "data" + File.separator + packageName + File.separator + "files"
-                + File.separator + "assets";
+        this.assetFolderPath = Environment.getDataDirectory().getAbsolutePath() + File.separator  + "data"
+                + File.separator + packageName + File.separator + "files"
+                + File.separator + "www" + File.separator + "assets";
 
         this.localRemoteResources = createLocalRemoteUris(urls);
         this.assetsThatFailedToDownload = new ArrayList<String>();
