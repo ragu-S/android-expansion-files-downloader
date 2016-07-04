@@ -6,11 +6,6 @@ package com.androidexpansion.filedownloader;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import org.json.JSONObject;
-
-/**
- * Created by intricus on 16-07-01.
- */
 public class DownloadFilesTask extends AsyncTask<DownloadExtraAssets.LocalRemoteAssetResource, Integer, Long> {
     DownloadExtraAssets downloadExtraAssets;
     AndroidExpansionFileDownloader reference;
@@ -21,9 +16,9 @@ public class DownloadFilesTask extends AsyncTask<DownloadExtraAssets.LocalRemote
     protected Long doInBackground(DownloadExtraAssets.LocalRemoteAssetResource[] remoteLocalResources) {
         int count = remoteLocalResources.length;
         long totalSize = 0;
-        for (int i = count-1; i >= 0; i--) {
+        for (int i = 0; i < count; i++) {
             totalSize += downloadExtraAssets.downloadFile(remoteLocalResources[i]);
-            Integer progress = (int)((i / (float) count) * 100);
+            Integer progress = (int)(((i+1) / (float) count) * 100);
 
             publishProgress(progress);
 

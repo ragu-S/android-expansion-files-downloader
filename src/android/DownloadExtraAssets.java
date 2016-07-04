@@ -19,9 +19,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by intricus on 16-06-28.
- */
 public class DownloadExtraAssets {
     public String assetFolderPath;
     public LocalRemoteAssetResource[] localRemoteResources;
@@ -68,6 +65,7 @@ public class DownloadExtraAssets {
                 + File.separator + "assets";
 
         this.localRemoteResources = createLocalRemoteUris(urls);
+        this.assetsThatFailedToDownload = new ArrayList<String>();
 
     }
     public LocalRemoteAssetResource[] createLocalRemoteUris(JSONArray urls) {
@@ -113,7 +111,7 @@ public class DownloadExtraAssets {
             // Prepare to download file from Server
             URL url = localRemoteResource.remoteUrl;
             url.openConnection();
-            InputStream inputStream = new BufferedInputStream(url.openStream(), 8192);
+            InputStream inputStream = new BufferedInputStream(url.openStream(), 10250);
             FileOutputStream outputStream = new FileOutputStream(assetFile);
             byte buffer[] = new byte[1024];
             int dataSize;
