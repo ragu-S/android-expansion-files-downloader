@@ -6,6 +6,8 @@ package com.androidexpansion.filedownloader;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.apache.cordova.PluginResult;
+
 public class DownloadFilesTask extends AsyncTask<DownloadExtraAssets.LocalRemoteAssetResource, Integer, Long> {
     DownloadExtraAssets downloadExtraAssets;
     AndroidExpansionFileDownloader reference;
@@ -37,7 +39,8 @@ public class DownloadFilesTask extends AsyncTask<DownloadExtraAssets.LocalRemote
         Log.d("DOWNLOAD_FINISHED", "Downloaded " + result + " bytes");
 
         if(this.reference.downloadStatusContext != null) {
-            this.reference.downloadStatusContext.success("Download finished!");
+            PluginResult pr = new PluginResult(PluginResult.Status.OK, this.downloadExtraAssets.assetsThatFailedToDownload);
+            this.reference.downloadStatusContext.sendPluginResult(pr);
         }
     }
 }

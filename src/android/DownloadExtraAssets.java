@@ -17,13 +17,12 @@ import java.io.InputStream;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 
 public class DownloadExtraAssets {
     public String assetFolderPath;
     public LocalRemoteAssetResource[] localRemoteResources;
     public static String hostUrl;
-    public ArrayList<String> assetsThatFailedToDownload;
+    public JSONArray assetsThatFailedToDownload;
 
     public class LocalRemoteAssetResource {
         public String fileName;
@@ -31,17 +30,10 @@ public class DownloadExtraAssets {
         public URL remoteUrl;
 
         public LocalRemoteAssetResource(String remoteUrlString) throws MalformedURLException {
-            this.remoteUrl = new URL(remoteUrlString);
-            parseUrlsPaths(this.remoteUrl);
+            this.remoteUrl = new URL(DownloadExtraAssets.hostUrl + "/" + remoteUrlString);
+            parseUrlsPaths(remoteUrlString);
         }
-        private void parseUrlsPaths(URL remoteUrl) {
-            // Ensure asset urls don't have
-            String localPath = remoteUrl.toString().replaceFirst(DownloadExtraAssets.hostUrl, "");
-
-            if(localPath.startsWith("/")) {
-                localPath = localPath.replaceFirst("/", "");
-            }
-
+        private void parseUrlsPaths(String localPath) {
             // /cars/mustang2015/geometry/Geometry_305_v6_fb_coupe_frontlightbulb1_a001.b3d.dflr
             // Set local uri path for subdirectory
             String[] pathArray = localPath.split("/");
@@ -52,8 +44,7 @@ public class DownloadExtraAssets {
         }
     }
 
-
-//    String contentEncoding = "UTF-8";
+    // String contentEncoding = "UTF-8";
     public DownloadExtraAssets(JSONArray urls, String hostUrl, Context context) {
         DownloadExtraAssets.hostUrl = hostUrl;
         String packageName =  context.getPackageName();
@@ -65,7 +56,7 @@ public class DownloadExtraAssets {
                 + File.separator + "www" + File.separator + "assets";
 
         this.localRemoteResources = createLocalRemoteUris(urls);
-        this.assetsThatFailedToDownload = new ArrayList<String>();
+        this.assetsThatFailedToDownload = new JSONArray();
 
     }
     public LocalRemoteAssetResource[] createLocalRemoteUris(JSONArray urls) {
@@ -78,24 +69,22 @@ public class DownloadExtraAssets {
             }
             catch (MalformedURLException e) {
                 try {
-                    assetsThatFailedToDownload.add((String) urls.get(i));
+                    assetsThatFailedToDownload.put(urls.get(i));
                     Log.e("MalformedURLException", e.getMessage());
                 }
                 catch(JSONException jsonException) {
                     Log.e("JSONExceptions", jsonException.getMessage());
-                    assetsThatFailedToDownload.add("unkown url at " + i);
+                    assetsThatFailedToDownload.put("unknown url at " + i);
                 }
             }
             catch(JSONException e) {
                 Log.e("JSONExceptions", e.getMessage());
-                assetsThatFailedToDownload.add("unkown url at " + i);
+                assetsThatFailedToDownload.put("unknown url at " + i);
             }
         }
         return localRemoteAssetResources;
     }
     public long downloadFile(LocalRemoteAssetResource localRemoteResource) {
-//        String url = "http://wwwqa.customizerassets.ford.com/v/1c3da8e0-3a4b-11e6-89f3-c7840396db3a";
-//        url += "/cars/mustang2015/geometry/Geometry_305_v6_fb_coupe_frontlightbulb1_a001.b3d.dflr";
         try {
             // Get/Create subdirectory the file belongs to
             File subDirectory = createSubDirectories(localRemoteResource.subDirectory);
@@ -127,7 +116,7 @@ public class DownloadExtraAssets {
         }
         catch(Exception exp) {
             Log.e("ASSET_ERROR", exp.getMessage());
-            assetsThatFailedToDownload.add(localRemoteResource.remoteUrl.toString());
+            assetsThatFailedToDownload.put(localRemoteResource.remoteUrl.toString());
             return 0;
         }
     }
