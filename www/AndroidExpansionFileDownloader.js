@@ -8,12 +8,12 @@ module.exports = {
             [hostUrl, assetUrls]
         );
     },
-    onProgressCallback: function(successcallback, errorcallback) {
+    checkIfFilesDownloadedPrior: function(successcallback, errorcallback) {
         cordova.exec(
             successcallback,
             errorcallback,
             'AndroidExpansionFileDownloader',
-            'onProgressCallback',
+            'checkIfFilesDownloadedPrior',
             []
         );
     }

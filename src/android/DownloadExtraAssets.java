@@ -5,6 +5,8 @@ package com.androidexpansion.filedownloader;
  */
 import android.content.Context;
 import android.os.Environment;
+import android.util.JsonReader;
+import android.util.JsonWriter;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -13,8 +15,10 @@ import org.json.JSONException;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.InputStream;
 
+import java.io.OutputStreamWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -58,6 +62,52 @@ public class DownloadExtraAssets {
         this.localRemoteResources = createLocalRemoteUris(urls);
         this.assetsThatFailedToDownload = new JSONArray();
 
+    }
+    public static JSONArray checkIfFilesWereDownloadedPrior(Context context) {
+        String packageName =  context.getPackageName();
+        String assetFolderPath = Environment.getDataDirectory().getAbsolutePath() + File.separator  + "data"
+                + File.separator + packageName + File.separator + "files"
+                + File.separator + "www" + File.separator + "assets";
+        File filesDownloaded = new File(assetFolderPath, "FilesDownloaded.json");
+
+        JSONArray jsonResult = new JSONArray();
+        if(!filesDownloaded.isFile()) {
+            return null;
+        }
+        try {
+            FileReader fileread = new FileReader(filesDownloaded);
+            JsonReader reader = new JsonReader(fileread);
+            reader.beginArray();
+
+            while (reader.hasNext()) {
+                jsonResult.put(reader.nextString());
+            }
+
+            reader.endArray();
+            reader.close();
+            fileread.close();
+        }
+        catch(Exception e) {
+            Log.e("JSON_READ_ERROR ", e.getMessage());
+        }
+        return jsonResult;
+    }
+    public void saveFileDownloadResults() {
+        File filesDownloaded = new File(this.assetFolderPath, "FilesDownloaded.json");
+
+        try {
+            FileOutputStream fileWriter = new FileOutputStream(filesDownloaded);
+            JsonWriter writer = new JsonWriter(new OutputStreamWriter(fileWriter, "UTF-8"));
+            writer.setIndent("  ");
+            writer.beginArray();
+            for(int i = 0; i < this.assetsThatFailedToDownload.length(); i++) writer.value((String) this.assetsThatFailedToDownload.get(i));
+            writer.endArray();
+            writer.close();
+            fileWriter.close();
+        }
+        catch(Exception e) {
+            Log.e("JSON_WRITE_ERROR", e.getMessage());
+        }
     }
     public LocalRemoteAssetResource[] createLocalRemoteUris(JSONArray urls) {
         LocalRemoteAssetResource[] localRemoteAssetResources = new LocalRemoteAssetResource[urls.length()];
