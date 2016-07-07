@@ -63,7 +63,7 @@ public class AndroidExpansionFileDownloader extends CordovaPlugin {
 
         DownloadExtraAssets downloadExtraAssets;
         DownloadFilesTask downloadFilesTask;
-
+        Log.d("ASSET_FOLDER_DEBUG", cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath());
         // Manages creating urls and saving files in specific locations
         // Host URL: must include full path to assets folder, dev server uses mustangdev.jam3.net/assets/
         downloadExtraAssets = new DownloadExtraAssets(jsonUrlArray, hostUrl, cordova.getActivity().getApplicationContext());
