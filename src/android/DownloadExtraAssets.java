@@ -55,7 +55,10 @@ public class DownloadExtraAssets {
 
         // Get path to where assets need to be stored
         // QA/Prod: data/data/com.mustangcustomizer2.alpha/files/www/assets/cars/mustang2015/geometry/Geometry_305_v6_fb_coupe_frontlightbulb1_a001.b3d.dflr";
-        this.assetFolderPath = Environment.getDataDirectory().getAbsolutePath() + File.separator  + "data"
+        // /data/user/0/com.mustangcustomizer2.alpha/files/
+        // /data/user/0/com.mustangcustomizer2.alpha/files/
+        this.assetFolderPath = Environment.getDataDirectory().getAbsolutePath() + File.separator  + "user"
+                + File.separator + "0"
                 + File.separator + packageName + File.separator + "files"
                 + File.separator + "www" + File.separator + "assets";
 
