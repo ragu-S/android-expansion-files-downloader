@@ -13,6 +13,12 @@ import org.json.JSONException;
 public class AndroidExpansionFileDownloader extends CordovaPlugin {
     CallbackContext downloadStatusContext;
     ProgressDialog progress;
+    
+    @Override
+    public void initialize(CordovaInterface cordova, CordovaWebView webView) {
+        super.initialize(cordova, webView);
+        Log.d("ASSET_FOLDER_DEBUG", cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath());
+    }
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
         if("startDownload".equals(action) || args.length() > 0 && !(args.get(0) instanceof JSONArray)) {
@@ -63,7 +69,7 @@ public class AndroidExpansionFileDownloader extends CordovaPlugin {
 
         DownloadExtraAssets downloadExtraAssets;
         DownloadFilesTask downloadFilesTask;
-        Log.d("ASSET_FOLDER_DEBUG", cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath());
+        
         // Manages creating urls and saving files in specific locations
         // Host URL: must include full path to assets folder, dev server uses mustangdev.jam3.net/assets/
         downloadExtraAssets = new DownloadExtraAssets(jsonUrlArray, hostUrl, cordova.getActivity().getApplicationContext());
