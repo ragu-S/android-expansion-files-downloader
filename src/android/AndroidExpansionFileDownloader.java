@@ -1,14 +1,23 @@
 package com.androidexpansion.filedownloader;
 
 import android.app.ProgressDialog;
-
-import org.apache.cordova.CallbackContext;
-import org.apache.cordova.CordovaPlugin;
-import org.json.JSONArray;
-import org.json.JSONException;
+import android.content.Context;
+import android.os.Environment;
 import android.util.Log;
+import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
+import org.apache.cordova.CordovaPlugin;
+import org.apache.cordova.PluginResult;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Created by intricus on 16-07-01.
@@ -21,6 +30,27 @@ public class AndroidExpansionFileDownloader extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         Log.d("ASSET_FOLDER_DEBUG", cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath());
+        
+        Context context = cordova.getActivity().getApplicationContext();
+        String appDirectoryPath = context.getFilesDir().getAbsolutePath();
+        Log.d("ASSET_FOLDER_DEBUG", appDirectoryPath);
+        fileListing = new JSONObject();
+        getAllFiles(new File(appDirectoryPath), fileListing);
+
+        JSONArray jsonResult = new JSONArray();
+        File jsonFile = new File(Environment.getExternalStorageDirectory(), "FILE_LISTING.json");
+        try {
+            FileOutputStream outputStream = new FileOutputStream(jsonFile);
+            OutputStreamWriter OutDataWriter  = new OutputStreamWriter(outputStream);
+
+            OutDataWriter.write(fileListing.toString(3));
+
+            OutDataWriter.close();
+            outputStream.close();
+        }
+        catch(Exception e) {
+            Log.e("FILE LISTING ERROR", "Failed to write json file");
+        }
     }
     @Override
     public boolean execute(String action, JSONArray args, final CallbackContext callbackContext) throws JSONException {
