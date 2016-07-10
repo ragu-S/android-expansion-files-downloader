@@ -16,5 +16,14 @@ module.exports = {
             'checkIfFilesDownloadedPrior',
             []
         );
+    },
+    getFileListing : function(successcallback, errorcallback) {
+        cordova.exec(
+            successcallback,
+            errorcallback,
+            'AndroidExpansionFileDownloader',
+            'getFileListing',
+            []
+        );
     }
 }
