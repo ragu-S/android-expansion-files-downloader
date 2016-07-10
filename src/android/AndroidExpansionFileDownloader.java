@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
+
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaInterface;
 import org.apache.cordova.CordovaWebView;
@@ -12,25 +13,23 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.Enumeration;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
 /**
  * Created by intricus on 16-07-01.
  */
 public class AndroidExpansionFileDownloader extends CordovaPlugin {
     CallbackContext downloadStatusContext;
     ProgressDialog progress;
-    
+    JSONObject fileListing;
     @Override
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        Log.d("ASSET_FOLDER_DEBUG", cordova.getActivity().getApplicationContext().getFilesDir().getAbsolutePath());
-        
         Context context = cordova.getActivity().getApplicationContext();
         String appDirectoryPath = context.getFilesDir().getAbsolutePath();
         Log.d("ASSET_FOLDER_DEBUG", appDirectoryPath);
@@ -80,6 +79,17 @@ public class AndroidExpansionFileDownloader extends CordovaPlugin {
                 }
             });
         }
+        else if ("downloadZipFile".equals(action)) {
+
+        }
+        else if ("getFileListing".equals(action)) {
+            cordova.getThreadPool().execute(new Runnable() {
+                public void run() {
+                    PluginResult pr = new PluginResult(PluginResult.Status.OK, fileListing);
+                    callbackContext.sendPluginResult(pr);
+                }
+            });
+        }
 
         return true;  // Returning false results in a "MethodNotFound" error.
     }
@@ -102,7 +112,7 @@ public class AndroidExpansionFileDownloader extends CordovaPlugin {
 
         DownloadExtraAssets downloadExtraAssets;
         DownloadFilesTask downloadFilesTask;
-        
+
         // Manages creating urls and saving files in specific locations
         // Host URL: must include full path to assets folder, dev server uses mustangdev.jam3.net/assets/
         downloadExtraAssets = new DownloadExtraAssets(jsonUrlArray, hostUrl, cordova.getActivity().getApplicationContext());
@@ -113,5 +123,52 @@ public class AndroidExpansionFileDownloader extends CordovaPlugin {
 
         downloadFilesTask.execute(downloadExtraAssets.localRemoteResources);
     }
+    private static JSONObject getAllFiles(File curDir, JSONObject filesInCurrentDirectory) {
+//        JSONObject filesInCurrentDirectory = new JSONObject();
+        File[] filesList = curDir.listFiles();
+        JSONArray fileListing = new JSONArray();
+        for(File f : filesList){
+            try {
+                if (f.isDirectory()) {
+                    getAllFiles(f, filesInCurrentDirectory);
+                }
+                if (f.isFile()) {
+                    filesInCurrentDirectory.put(f.getName(), f.getAbsolutePath());
+                }
+            }
+            catch(Exception e) {
+                Log.e("JSON_FILE_LIST_ERROR", "unable to list file name for " + f.getName());
+            }
+        }
+        try {
+            filesInCurrentDirectory.put(curDir.getName(), fileListing);
+        }
+        catch(Exception e) {
+            Log.e("JSON_FILE_LIST_ERROR", "unable to list file name for " + curDir.getName());
+        }
+        return filesInCurrentDirectory;
+    }
 
+    public void readZipFile(File zipFile) {
+        try {
+            if(zipFile == null || !zipFile.isFile()) {
+                Log.e("ZIP_READ_ERROR", "unable to find zip file");
+                return;
+            }
+
+            ZipFile zip = new ZipFile(zipFile);
+            for (Enumeration<? extends ZipEntry> e = zip.entries(); e.hasMoreElements();) {
+                ZipEntry entry = e.nextElement();
+
+                Log.d("ZIP_ENTRY", entry.getName());
+                zip.getInputStream(entry);
+                //entry.
+                //System.out.println(e.nextElement());
+            }
+        }
+        catch(Exception e) {
+            Log.e("ZIP_READ_ERROR", e.getMessage());
+        }
+
+    }
 }
